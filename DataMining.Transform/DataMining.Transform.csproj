@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Transform</RootNamespace>
+    <AssemblyName>Transform</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="ARFF Files\dm2test_CubeRoot.arff" />
+    <None Include="ARFF Files\dm2test_Cubic.arff" />
+    <None Include="ARFF Files\dm2test_Exponential.arff" />
+    <None Include="ARFF Files\dm2test_Inverse.arff" />
+    <None Include="ARFF Files\dm2test_lin.arff" />
+    <None Include="ARFF Files\dm2test_Quadratic.arff" />
+    <None Include="ARFF Files\dm2test_Sqrt.arff" />
+    <None Include="ARFF Files\dm_CubeRoot.arff" />
+    <None Include="ARFF Files\dm_Cubic.arff" />
+    <None Include="ARFF Files\dm_Exponential.arff" />
+    <None Include="ARFF Files\dm_Inverse.arff" />
+    <None Include="ARFF Files\dm_lin.arff" />
+    <None Include="ARFF Files\dm_Quadratic.arff" />
+    <None Include="ARFF Files\dm_Sqrt.arff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ARFF Files\dmtest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataMining.Functions\DataMining.Utilities.csproj">
+      <Project>{2a6886a7-69ec-4622-9613-97d504c8f879}</Project>
+      <Name>DataMining.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <Message Text="Hello world" Importance="high" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

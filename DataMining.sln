@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMining.Simulate", "DataMining.Simulate\DataMining.Simulate.csproj", "{3AB8D1C5-EF49-44CC-A681-9DDCBAE932B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMining.Transform", "DataMining.Transform\DataMining.Transform.csproj", "{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMining.Utilities", "DataMining.Utilities\DataMining.Utilities.csproj", "{2A6886A7-69EC-4622-9613-97D504C8F879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMining.Scraper", "DataMining.Scraper\DataMining.Scraper.csproj", "{508AB413-8015-4181-876C-73B93E303872}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AB8D1C5-EF49-44CC-A681-9DDCBAE932B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB8D1C5-EF49-44CC-A681-9DDCBAE932B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB8D1C5-EF49-44CC-A681-9DDCBAE932B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB8D1C5-EF49-44CC-A681-9DDCBAE932B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AA10EB9-46D2-4B7B-B3D8-815ECA5DDD87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A6886A7-69EC-4622-9613-97D504C8F879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A6886A7-69EC-4622-9613-97D504C8F879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A6886A7-69EC-4622-9613-97D504C8F879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A6886A7-69EC-4622-9613-97D504C8F879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{508AB413-8015-4181-876C-73B93E303872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{508AB413-8015-4181-876C-73B93E303872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{508AB413-8015-4181-876C-73B93E303872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{508AB413-8015-4181-876C-73B93E303872}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
