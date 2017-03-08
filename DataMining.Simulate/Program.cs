@@ -12,7 +12,7 @@ namespace DataMining.Simulate
     {
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
-        const bool UsingEnumData = false;
+        //const bool UsingEnumData = false;
         const Transformations FN = Transformations.Exp18;
 
         // input and output file names
@@ -42,8 +42,8 @@ namespace DataMining.Simulate
 
                 if (SimulatingTestSet && teamNames.Length != 64)
                 {
-                    Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]),
-                        t2 = null;
+                    Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]);
+                    Team t2 = null;
                     
                     for (int j = 0, poolIndex = 0; j < teamNames.Length - 1; j++, poolIndex++)
                     {
@@ -130,10 +130,10 @@ namespace DataMining.Simulate
             }
         }
 
-        static Team BuildTeam(string stats, string proj)
+        static Team BuildTeam(string stats, string wekaOutput)
         {
             string[] team_data = stats.Split(",\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            string[] proj_data = proj.Split(",\t ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] proj_data = wekaOutput.Split(",\t ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             return new Team()
             {

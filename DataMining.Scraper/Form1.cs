@@ -1,9 +1,6 @@
 ﻿using CsQuery;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -15,8 +12,8 @@ namespace DataMining.Scraper
 {
     public partial class Form1 : Form
     {
-        const string StatsPrefix = "http://espn.go.com/mens-college-basketball/team/stats/_/id/";
-        const string teamHome = "http://espn.go.com/mens-college-basketball/team/_/id/";
+        const string espnTeamStats = "http://espn.go.com/mens-college-basketball/team/stats/_/id/";
+        const string espnTeamHome = "http://espn.go.com/mens-college-basketball/team/_/id/";
         //const string rpiPage = "http://www.cbssports.com/collegebasketball/bracketology/nitty-gritty-report";
 
         const string recordSelect = "",
@@ -30,7 +27,13 @@ namespace DataMining.Scraper
             fgpSelect = ".total td:nth-child(10)",
             ftpSelect = ".total td:nth-child(11)",
             tppSelect = ".total td:nth-child(12)";
-        
+
+        private void teamDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtTeam.Text = ((ComboBox)sender).Text;
+            txtEspnId.Text = ((ComboBox)sender).SelectedValue.ToString();
+        }
+
         string[] PowerConferences = {"ACC",
                                        "Big 12",
                                        "Big Ten",
@@ -41,6 +44,13 @@ namespace DataMining.Scraper
         public Form1()
         {
             InitializeComponent();
+
+            var teams = File.ReadAllLines(@"..\..\TeamNames.txt")
+                .Select(s => s.Split(','))
+                .Select(t => new { Id = t[0], Name = t[1].Trim() })
+                .OrderBy(t => t.Name)
+                .ToList();
+            teamDropdown.DataSource = teams;
         }
 
         private async void btnSubmit_Click(object sender, EventArgs e)
@@ -48,8 +58,8 @@ namespace DataMining.Scraper
             btnSubmit.Enabled = false;
 
             HttpClient http = new HttpClient();
-            Task<HttpResponseMessage> statsResponse = http.GetAsync(StatsPrefix + txtEspnId.Text);
-            Task<HttpResponseMessage> teamsResponse = http.GetAsync(teamHome + txtEspnId.Text);
+            Task<HttpResponseMessage> statsResponse = http.GetAsync(espnTeamStats + txtEspnId.Text);
+            Task<HttpResponseMessage> teamsResponse = http.GetAsync(espnTeamHome + txtEspnId.Text);
 
             string name = txtTeam.Text,
                 year = "2016",
@@ -113,11 +123,31 @@ namespace DataMining.Scraper
             // Clear the two files above, append line to end of file
             //File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\n" + dm2test_lin);
             //File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\n" + teams_test);
+            string.Join(",\r\n",
+                "'" + name + "'", year, seed, record, conference, rpi, finish,
+                ppg, rpg, apg, spg, bpg, tpg, fgp, ftp, tpp);
+
+            validationTextBox.Text = "'" + name + "',\r\n"
+                + year + ",\r\n"
+                + seed + ",\r\n"
+                + record + ",\r\n"
+                + conference + ",\r\n"
+                + rpi + ",\r\n"
+                + finish + ",\r\n"
+                + ppg + ",\r\n"
+                + rpg + ",\r\n"
+                + apg + ",\r\n"
+                + spg + ",\r\n"
+                + bpg + ",\r\n"
+                + tpg + ",\r\n"
+                + fgp + ",\r\n"
+                + ftp + ",\r\n"
+                + tpp;
 
             txtTeam.Text = "";
             txtEspnId.Text = "";
             txtSeed.Text = "";
-            btnSubmit.Enabled = true;
+            outputButton.Enabled = true;
         }
     }
 }
