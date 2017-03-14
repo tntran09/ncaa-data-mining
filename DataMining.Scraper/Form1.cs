@@ -14,7 +14,6 @@ namespace DataMining.Scraper
     {
         const string espnTeamStats = "http://espn.go.com/mens-college-basketball/team/stats/_/id/";
         const string espnTeamHome = "http://espn.go.com/mens-college-basketball/team/_/id/";
-        //const string rpiPage = "http://www.cbssports.com/collegebasketball/bracketology/nitty-gritty-report";
 
         const string recordSelect = "",
             rpiSelect = "",
@@ -28,19 +27,22 @@ namespace DataMining.Scraper
             ftpSelect = ".total td:nth-child(11)",
             tppSelect = ".total td:nth-child(12)";
 
-        private void teamDropdown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            txtTeam.Text = ((ComboBox)sender).Text;
-            txtEspnId.Text = ((ComboBox)sender).SelectedValue.ToString();
-        }
-
-        string[] PowerConferences = {"ACC",
+        readonly string[] PowerConferences = {"ACC",
                                        "Big 12",
                                        "Big Ten",
                                        "Pac-12",
                                        "SEC",
                                        "Big East"
-                                    }; // No AAC
+                                    }; // No American
+
+        string TeamStatLine { get; set; }
+        string FilteredStatLine { get; set; }
+
+        private void teamDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            idTextBox.Text = ((ComboBox)sender).SelectedValue.ToString();
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -55,16 +57,15 @@ namespace DataMining.Scraper
 
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
-            btnSubmit.Enabled = false;
-
             HttpClient http = new HttpClient();
-            Task<HttpResponseMessage> statsResponse = http.GetAsync(espnTeamStats + txtEspnId.Text);
-            Task<HttpResponseMessage> teamsResponse = http.GetAsync(espnTeamHome + txtEspnId.Text);
+            Task<HttpResponseMessage> statsResponse = http.GetAsync(espnTeamStats + idTextBox.Text);
+            Task<HttpResponseMessage> teamsResponse = http.GetAsync(espnTeamHome + idTextBox.Text);
 
-            string name = txtTeam.Text,
-                year = "2016",
-                seed = txtSeed.Text,
-                finish = "0";
+            FilteredStatLine = "";
+            TeamStatLine = "";
+            btnSubmit.Enabled = false;
+            outputButton.Enabled = false;
+            validationTextBox.Text = "";
 
             string teamBody = await (await teamsResponse).Content.ReadAsStringAsync();
             CQ html = new CQ(teamBody);
@@ -73,9 +74,9 @@ namespace DataMining.Scraper
             string recordText = html["li.record"].Text();
 
             string[] parts = recordText.Substring(0, recordText.Length / 2).Split('-');
-            int win  = int.Parse(parts[0]),
-                lose = int.Parse(parts[1]);
-            string record = Math.Round(win / (float)(win + lose), 4).ToString();
+            float win  = int.Parse(parts[0]),
+                  lose = int.Parse(parts[1]);
+            string record = Math.Round(win / (win + lose), 4).ToString();
 
             // Check if team is in major conference
             string subTitle = html["li.ranking"].First().Text();
@@ -85,69 +86,55 @@ namespace DataMining.Scraper
             // Get RPI ranking
             //string rk = html["#teamrankingtable tr.even a"].First().Text();
             //int openPar = rk.IndexOf("(") + 1, closePar = rk.IndexOf(")");
-            string rpi = ".000";// double.Parse(rk.Substring(openPar, closePar - openPar)).ToString();
+            //string rpi = double.Parse(rk.Substring(openPar, closePar - openPar)).ToString();
+            string rpi = ".000";
 
             // Parse remaining per game stats
             string statsBody = await (await statsResponse).Content.ReadAsStringAsync();
             html = new CQ(statsBody);
             CQ body = html["#my-teams-table"];
             string ppg = body[ppgSelect].First().Text(),
-                rpg = body[rpgSelect].First().Text(),
-                apg = body[apgSelect].First().Text(),
-                spg = body[spgSelect].First().Text(),
-                bpg = body[bpgSelect].First().Text(),
-                tpg = body[tpgSelect].First().Text(),
-                fgp = body[fgpSelect].First().Text(),
-                ftp = body[ftpSelect].First().Text(),
-                tpp = body[tppSelect].First().Text();
+                   rpg = body[rpgSelect].First().Text(),
+                   apg = body[apgSelect].First().Text(),
+                   spg = body[spgSelect].First().Text(),
+                   bpg = body[bpgSelect].First().Text(),
+                   tpg = body[tpgSelect].First().Text(),
+                   fgp = body[fgpSelect].First().Text(),
+                   ftp = body[ftpSelect].First().Text(),
+                   tpp = body[tppSelect].First().Text();
+            
+            string name = teamDropdown.Text,
+                   year = "2016",
+                   seed = seedTextBox.Text,
+                 finish = "0";
 
-            string dm2test_lin = seed + ",\t"
-                + record + ",\t"
-                + isPower + ",\t"
-                + rpi + ",\t"
-                + finish + ",\t"
-                + ppg + ",\t"
-                + rpg + ",\t"
-                + apg + ",\t"
-                + spg + ",\t"
-                + bpg + ",\t"
-                + tpg + ",\t"
-                + fgp + ",\t"
-                + ftp + ",\t"
-                + tpp;
+            FilteredStatLine = string.Join(",\t",
+                seed, record, isPower, rpi, finish,
+                ppg, rpg, apg, spg, bpg, tpg, fgp, ftp, tpp);
 
-            string teams_test = "'" + name + "',\t"
-                + year + ",\t"
-                + dm2test_lin;
+            TeamStatLine = string.Join(",\t",
+                "'" + name + "'", year,
+                FilteredStatLine);
 
-            // Clear the two files above, append line to end of file
-            //File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\n" + dm2test_lin);
-            //File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\n" + teams_test);
-            string.Join(",\r\n",
+            validationTextBox.Text = string.Join(",\r\n",
                 "'" + name + "'", year, seed, record, conference, rpi, finish,
                 ppg, rpg, apg, spg, bpg, tpg, fgp, ftp, tpp);
 
-            validationTextBox.Text = "'" + name + "',\r\n"
-                + year + ",\r\n"
-                + seed + ",\r\n"
-                + record + ",\r\n"
-                + conference + ",\r\n"
-                + rpi + ",\r\n"
-                + finish + ",\r\n"
-                + ppg + ",\r\n"
-                + rpg + ",\r\n"
-                + apg + ",\r\n"
-                + spg + ",\r\n"
-                + bpg + ",\r\n"
-                + tpg + ",\r\n"
-                + fgp + ",\r\n"
-                + ftp + ",\r\n"
-                + tpp;
-
-            txtTeam.Text = "";
-            txtEspnId.Text = "";
-            txtSeed.Text = "";
+            seedTextBox.Text = "";
             outputButton.Enabled = true;
+        }
+        
+        private void outputButton_Click(object sender, EventArgs e)
+        {
+            // Clear the two files above, append line to end of file
+            File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\r\n" + FilteredStatLine);
+            File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\r\n" + TeamStatLine);
+
+            FilteredStatLine = "";
+            TeamStatLine = "";
+            btnSubmit.Enabled = true;
+            validationTextBox.Text = "";
+            outputButton.Enabled = false;
         }
     }
 }
