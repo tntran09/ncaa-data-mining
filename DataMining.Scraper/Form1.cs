@@ -127,8 +127,8 @@ namespace DataMining.Scraper
         private void outputButton_Click(object sender, EventArgs e)
         {
             // Clear the two files above, append line to end of file
-            File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\r\n" + FilteredStatLine);
-            File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\r\n" + TeamStatLine);
+            //File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\r\n" + FilteredStatLine);
+            //File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\r\n" + TeamStatLine);
 
             FilteredStatLine = "";
             TeamStatLine = "";

@@ -10,6 +10,10 @@ namespace DataMining.Simulate
 {
     class Program
     {
+        const string wekaClassPath = @"C:\Program Files\Weka-3-8\weka.jar";
+        string filterCmd = "weka.filters.unsupervised.attribute.Remove -R 1-2 -i ";
+        string classifierCmd = "weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a";
+
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
@@ -75,15 +79,6 @@ namespace DataMining.Simulate
                         int idx = i * 64 + j;
                         Team t = BuildTeam(teamNames[idx], wekaPredictions[idx]);
                         tournamentPool[j] = t;
-                        //string[] team_data = teamNames[i * 64 + j].Split(",\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        //string[] proj_data = wekaPredictions[i * 64 + j].Split(",\t ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        //tournamentPool[j] = new Team()
-                        //{
-                        //    Name = team_data[0].Trim(),
-                        //    Year = int.Parse(team_data[1].Trim()),
-                        //    ActualFinish = double.Parse(proj_data[1]),
-                        //    PredictedFinish = double.Parse(proj_data[2])
-                        //};
                     }
                 }
 

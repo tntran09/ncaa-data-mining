@@ -1,6 +1,8 @@
 # Assets and output directories
 *.arff
-*.txt
+DataMining.Scraper/*.txt
+DataMining.Simulate/simulation.txt
+DataMining.Simulate/weka_predictions.txt
 DataMining.Simulate/SimulationResults
 DataMining.Transform/ARFF Files
 

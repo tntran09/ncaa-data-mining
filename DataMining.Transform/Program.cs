@@ -18,18 +18,20 @@ namespace Transform
             try
             {
                 Transformations[] selectedTransforms = {
-                                                            Transformations.Exponential,
-                                                            Transformations.CubeRoot,
-                                                            Transformations.Cubic,
-                                                            Transformations.Inverse,
-                                                            Transformations.Quadratic,
-                                                            Transformations.Sqrt,
-                                                            Transformations.Cube0,
-                                                            Transformations.Exp15,
-                                                            Transformations.Exp18
+                                                            //Transformations.Exponential,
+                                                            //Transformations.CubeRoot,
+                                                            //Transformations.Cubic,
+                                                            //Transformations.Inverse,
+                                                            //Transformations.Quadratic,
+                                                            //Transformations.Sqrt,
+                                                            //Transformations.Cube0,
+                                                            //Transformations.Exp15,
+                                                            //Transformations.Exp18
                                                        };
+
                 if (selectedTransforms.Length == 0)
                     selectedTransforms = (Transformations[])Enum.GetValues(typeof(Transformations));
+
                 foreach (Transformations t in selectedTransforms)
                 {
                     TransformData(
@@ -66,12 +68,12 @@ namespace Transform
 
             for (int i = linesToSkip; i < original.Length; i++)
             {
-                char[] delimeters = ",\t".ToCharArray();
+                char[] delimeters = { ',', '\t' };
                 string[] arr = original[i].Split(delimeters, StringSplitOptions.RemoveEmptyEntries);
                 int val = int.Parse(arr[columnIndex]);
                 arr[columnIndex] = Math.Round(Functions.Map[fn](val), 4).ToString();
-                if (fn.ToString() == "Enum")
-                    arr[columnIndex] = "'" + arr[columnIndex] + "'";
+                //if (fn.ToString() == "Enum")
+                //    arr[columnIndex] = "'" + arr[columnIndex] + "'";
 
                 modified[i] = arr[0] + "," + new string('\t', (6 - (arr[0].Length + 1) / 4)) + string.Join(",\t", arr.Skip(1));
             }
