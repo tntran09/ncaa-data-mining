@@ -70,6 +70,8 @@ namespace DataMining.Scraper
             string teamBody = await (await teamsResponse).Content.ReadAsStringAsync();
             CQ html = new CQ(teamBody);
 
+            string fullTeamName = html[".team-name .link-text"].First().Text();
+
             // Parse wins and losses to get win pct.
             string recordText = html["li.record"].Text();
 
@@ -104,7 +106,7 @@ namespace DataMining.Scraper
                    tpp = body[tppSelect].First().Text();
             
             string name = teamDropdown.Text,
-                   year = "2016",
+                   year = "2017",
                    seed = seedTextBox.Text,
                  finish = "0";
 
@@ -117,18 +119,20 @@ namespace DataMining.Scraper
                 FilteredStatLine);
 
             validationTextBox.Text = string.Join(",\r\n",
-                "'" + name + "'", year, seed, record, conference, rpi, finish,
+                "'" + fullTeamName + "'", year, seed,
+                win + "-" + lose + " " + record, conference, rpi, finish,
                 ppg, rpg, apg, spg, bpg, tpg, fgp, ftp, tpp);
 
             seedTextBox.Text = "";
+            btnSubmit.Enabled = true;
             outputButton.Enabled = true;
         }
         
         private void outputButton_Click(object sender, EventArgs e)
         {
             // Clear the two files above, append line to end of file
-            //File.AppendAllText(@"..\..\..\Transform\ARFF Files\dm2test_lin.arff", "\r\n" + FilteredStatLine);
-            //File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\r\n" + TeamStatLine);
+            File.AppendAllText(@"..\..\..\DataMining.Transform\ARFF Files\dm2test_lin.arff", "\r\n" + FilteredStatLine);
+            File.AppendAllText(@"..\..\..\DataMining.Simulate\teams_test.txt", "\r\n" + TeamStatLine);
 
             FilteredStatLine = "";
             TeamStatLine = "";

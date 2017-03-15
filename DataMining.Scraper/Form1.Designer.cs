@@ -101,7 +101,7 @@
             this.validationTextBox.Location = new System.Drawing.Point(482, 12);
             this.validationTextBox.Multiline = true;
             this.validationTextBox.Name = "validationTextBox";
-            this.validationTextBox.Size = new System.Drawing.Size(478, 350);
+            this.validationTextBox.Size = new System.Drawing.Size(478, 475);
             this.validationTextBox.TabIndex = 0;
             this.validationTextBox.TabStop = false;
             // 
@@ -121,7 +121,7 @@
             // outputButton
             // 
             this.outputButton.Enabled = false;
-            this.outputButton.Location = new System.Drawing.Point(761, 369);
+            this.outputButton.Location = new System.Drawing.Point(762, 493);
             this.outputButton.Name = "outputButton";
             this.outputButton.Size = new System.Drawing.Size(198, 42);
             this.outputButton.TabIndex = 8;
@@ -133,7 +133,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(972, 484);
+            this.ClientSize = new System.Drawing.Size(972, 653);
             this.Controls.Add(this.outputButton);
             this.Controls.Add(this.teamDropdown);
             this.Controls.Add(this.validationTextBox);
