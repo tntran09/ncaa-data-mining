@@ -1,3 +1,67 @@
+Kansas,		2016,	1
+Austin Peay,	2016,	16
+Colorado,		2016,	8
+Connecticut,	2016,	9
+Maryland,		2016,	5
+South Dakota St,	2016,	12
+California,	2016,	4
+Hawaii,		2016,	13
+Arizona,		2016,	6
+Wichita St,	2016,	11
+Miami,		2016,	3
+Buffalo,		2016,	14
+Iowa,			2016,	7
+Temple,		2016,	10
+Villanova,	2016,	2
+UNC Ashe,		2016,	15
+Oregon,		2016,	1
+Holy Cross,	2016,	16
+St Joseph,	2016,	8
+Cincinatti,	2016,	9
+Baylor,		2016,	5
+Yale,			2016,	12
+Duke,			2016,	4
+UNC Wilm,		2016,	13
+Texas,		2016,	6
+Northern Iowa,	2016,	11
+TAMU,			2016,	3
+Green Bay,	2016,	14
+Oregon St,	2016,	7
+VCU,			2016,	10
+Oklahoma,		2016,	2
+Cal Bakers,	2016,	15
+UNC,			2016,	1
+FGCU,			2016,	16
+USC,			2016,	8
+Providence,	2016,	9
+Indiana,		2016,	5
+Chattanooga,	2016,	12
+Kentucky,		2016,	4
+Stony Brook,	2016,	13
+Notre Dame,	2016,	6
+Michigan,		2016,	11
+West Virginia,	2016,	3
+SFA,			2016,	14
+Wisconsin,	2016,	7
+Pittsburgh,	2016,	10
+Xavier,		2016,	2
+Weber St,		2016,	15
+Virginia,		2016,	1
+Hampton,		2016,	16
+Texas Tech,	2016,	8
+Butler,		2016,	9
+Purdue,		2016,	5
+Little Rock,	2016,	12
+Iowa St,		2016,	4
+Iona,			2016,	13
+Seton Hall,	2016,	6
+Gonzaga,		2016,	11
+Utah,			2016,	3
+Fresno St,	2016,	14
+Dayton,		2016,	7
+Syracuse,		2016,	10
+Michigan St,	2016,	2
+MTSU,			2016,	15
 Kentucky,			2015,	1
 Hampton,			2015,	16
 Cincinatti,		2015,	8
