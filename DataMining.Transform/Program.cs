@@ -1,10 +1,7 @@
 ﻿using DataMining.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Transform
 {
@@ -18,16 +15,8 @@ namespace Transform
             try
             {
                 Transformations[] selectedTransforms = {
-                                                            //Transformations.Exponential,
-                                                            //Transformations.CubeRoot,
-                                                            //Transformations.Cubic,
-                                                            //Transformations.Inverse,
-                                                            //Transformations.Quadratic,
-                                                            //Transformations.Sqrt,
-                                                            //Transformations.Cube0,
-                                                            //Transformations.Exp15,
-                                                            //Transformations.Exp18
-                                                       };
+
+                };
 
                 if (selectedTransforms.Length == 0)
                     selectedTransforms = (Transformations[])Enum.GetValues(typeof(Transformations));

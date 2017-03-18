@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataMining.Utilities
 {
-    public enum Transformations { Cubic, CubeRoot, Exponential, Inverse, Linear, Quadratic, LargeCubeRoot, Sqrt, Sqrt10, Cube0, Exp15, Exp18 }
+    public enum Transformations { Cubic, CubeRoot, Exponential, Inverse, Linear, Quadratic, LargeCubeRoot, Sqrt, Sqrt10, Cube0, Exp15, Exp18, Exp16 }
 
     public static class Functions
     {
@@ -23,7 +23,8 @@ namespace DataMining.Utilities
             { Transformations.Sqrt10, finish => Math.Sqrt(finish * 10) },
             { Transformations.Cube0, finish => Math.Pow(finish, 3) },
             { Transformations.Exp15, finish => Math.Pow(1.5, finish) },
-            { Transformations.Exp18, finish => Math.Pow(1.8, finish) }
+            { Transformations.Exp18, finish => Math.Pow(1.8, finish) },
+            { Transformations.Exp16, finish => Math.Pow(1.6, finish) }
         };
 
         public static double NthRoot(double x, double y)

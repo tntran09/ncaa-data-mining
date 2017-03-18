@@ -13,9 +13,9 @@ namespace DataMining.Simulate
     class Program
     {
         // variables that determine type of simulation to run
-        const bool SimulatingTestSet = false;
+        const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformations SelectedFn = Transformations.Linear;
+        const Transformations SelectedFn = Transformations.Exp15;
 
         // input and output file names
         const string wekaResults = "weka_predictions.txt";
@@ -28,98 +28,136 @@ namespace DataMining.Simulate
 
         static void Main(string[] args)
         {
-            List<string> output = new List<string>();
-            string o = string.Empty;
 
             // weka output does not include team names
             string[] teamNames = File.ReadAllLines(@"..\..\" + (SimulatingTestSet ? teamsTest : teamsTraining));
-            string[] wekaPredictions = Analyze(SelectedFn);
-
             int ITERATIONS = teamNames.Length / 64;
+            int[] trainingScores = new int[ITERATIONS];
 
-            for (int i = 0; i < ITERATIONS; i++)
+            for (int seed = 0; seed < 10; seed++)
             {
-                Team[] tournamentPool = new Team[64];
-                int year = yearOrder[i];
+                List<string> output = new List<string>();
+                string o = string.Empty;
+                string[] wekaPredictions = Analyze(SelectedFn, seed);
 
-                if (SimulatingTestSet && teamNames.Length != 64)
+                for (int i = 0; i < ITERATIONS; i++)
                 {
-                    Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]);
-                    Team t2 = null;
-                    
-                    for (int j = 0, poolIndex = 0; j < teamNames.Length - 1; j++, poolIndex++)
-                    {
-                        t2 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+                    Team[] tournamentPool = new Team[64];
+                    int year = yearOrder[i];
 
-                        // Only simulate a game if they are the same seed
-                        if (t1.Seed == t2.Seed)
+                    if (SimulatingTestSet && teamNames.Length != 64)
+                    {
+                        Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]);
+                        Team t2 = null;
+
+                        for (int j = 0, poolIndex = 0; j < teamNames.Length - 1; j++, poolIndex++)
                         {
-                            Team win = SimulateGame(t1, t2);
-                            tournamentPool[poolIndex] = win;
-                            j++;
-                            t1 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+                            t2 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+
+                            // Only simulate a game if they are the same seed
+                            if (t1.Seed == t2.Seed)
+                            {
+                                Team win = SimulateGame(t1, t2);
+                                tournamentPool[poolIndex] = win;
+                                j++;
+                                t1 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+                            }
+                            else
+                            {
+                                tournamentPool[poolIndex] = t1;
+                                t1 = t2;
+                            }
+                        }
+
+                        //Team t64 = BuildTeam(teamNames[63], wekaPredictions[63]);
+                        tournamentPool[63] = t2;
+                        // FirstFour teams will not be at the bottom of the bracket
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 64; j++)
+                        {
+                            int idx = i * 64 + j;
+                            Team t = BuildTeam(teamNames[idx], wekaPredictions[idx]);
+                            tournamentPool[j] = t;
+                        }
+                    }
+
+                    int totalGamePoints = 0;
+                    for (int round = 1; round <= 6; round++)
+                    {
+                        tournamentPool = SimulateRound(tournamentPool);
+
+                        int roundPoints = 0;
+                        int pointsPerWin = (int)Math.Pow(2, (round - 1));
+                        int nextRoundNum = round + 1;
+
+                        foreach (Team winner in tournamentPool)
+                        {
+                            if (winner.ActualFinish >= Functions.Map[SelectedFn].Invoke(nextRoundNum))
+                            {
+                                roundPoints += pointsPerWin;
+                                o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
+                                //o = winner.Seed + " " + winner.Name;
+                            }
+                            else
+                            {
+                                o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
+                                //o = winner.Seed + " " + winner.Name;
+                            }
+
+                            if (SimulatingTestSet)
+                            {
+                                Console.WriteLine(o);
+                                output.Add(o);
+                            }
+                        }
+                        roundPoints *= 10;
+                        totalGamePoints += roundPoints;
+
+                        if (SimulatingTestSet)
+                        {
+                            o = roundPoints + " scored in round " + round;
+                            output.Add(o);
+                            output.Add("");
                         }
                         else
                         {
-                            tournamentPool[poolIndex] = t1;
-                            t1 = t2;
+                            //o = roundPoints.ToString();
+                            //output.Add(o);
                         }
+                        Console.WriteLine(o);
                     }
-
-                    //Team t64 = BuildTeam(teamNames[63], wekaPredictions[63]);
-                    tournamentPool[63] = t2;
-                    // FirstFour teams will not be at the bottom of the bracket
-                }
-                else
-                {
-                    for (int j = 0; j < 64; j++)
-                    {
-                        int idx = i * 64 + j;
-                        Team t = BuildTeam(teamNames[idx], wekaPredictions[idx]);
-                        tournamentPool[j] = t;
-                    }
-                }
-
-                int totalGamePoints = 0;
-                for (int round = 1; round <= 6; round++)
-                {
-                    tournamentPool = SimulateRound(tournamentPool);
-                    
-                    int roundPoints = 0;
-                    int pointsPerWin = (int)Math.Pow(2, (round - 1));
-                    int nextRoundNum = round + 1;
-
-                    foreach (Team winner in tournamentPool)
-                    {
-                        if (winner.ActualFinish >= Functions.Map[SelectedFn].Invoke(nextRoundNum))
-                        {
-                            roundPoints += pointsPerWin;
-                            //o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
-                            //o = winner.Name;
-                        }
-                        else
-                        {
-                            //o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
-                            //o = winner.Name;
-                        }
-
-                        //Console.WriteLine(o);
-                        //output.Add(o);
-                    }
-                    roundPoints *= 10;
-                    totalGamePoints += roundPoints;
-
-                    o = roundPoints + " scored in round " + round;
+                    o = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
+                    trainingScores[i] = totalGamePoints;
                     Console.WriteLine(o);
                     output.Add(o);
                     output.Add("");
-                }
-                o = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
-                Console.WriteLine(o);
-                output.Add(o);
-                output.Add("");
 
-                File.WriteAllLines(@"..\..\" + simulationResultsFile, output);
+
+                    string outputFileName = string.Join("_",
+                        SimulatingTestSet ? "Test" : "Training",
+                        SelectedFn.ToString(),
+                        seed,
+                        ".txt");
+                    File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
+                }
+
+                if (!SimulatingTestSet)
+                {
+                    string outputFileName = string.Join("_",
+                        SimulatingTestSet ? "Test" : "Training",
+                        SelectedFn.ToString(),
+                        seed,
+                        ".txt");
+                    File.AppendAllLines(@"..\..\SimulationResults\" + outputFileName, new[] {
+                        "Scores: " + string.Join(",", trainingScores),
+                        "Average: " + trainingScores.Average(),
+                        "Min: " + trainingScores.Min(),
+                        "Max: " + trainingScores.Max(),
+                        ""
+                    });
+                }
             }
         }
 
@@ -128,7 +166,7 @@ namespace DataMining.Simulate
         /// </summary>
         /// <param name="function"></param>
         /// <returns></returns>
-        static string[] Analyze(Transformations function)
+        static string[] Analyze(Transformations function, int randomSeed)
         {
             string wekaClassPath = @"C:\Program Files\Weka-3-8\weka.jar";
             string arffPath = @"..\..\..\DataMining.Transform\ARFF Files\";
@@ -144,10 +182,11 @@ namespace DataMining.Simulate
             string testFileName = SimulatingTestSet
                 ? arffPath + BuildDataSetFileName(function, false)
                 : filterOutputFileName;
-            string classifierCmd = string.Format("weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a -t \"{0}\" -T \"{1}\" -c 5 -p 0 > \"{2}\"",
+            string classifierCmd = string.Format("weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S {3} -E 20 -H a -t \"{0}\" -T \"{1}\" -c 5 -p 0 > \"{2}\"",
                 filterOutputFileName,
                 testFileName,
-                classifierOutputFileName);
+                classifierOutputFileName,
+                randomSeed);
             string executeClassifier = string.Format("java -classpath \"{0}\" {1}", wekaClassPath, classifierCmd);
 
             Process.Start("cmd.exe", "/C " + executeClassifier).WaitForExit();

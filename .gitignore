@@ -3,6 +3,7 @@
 DataMining.Scraper/*.txt
 DataMining.Simulate/simulation.txt
 DataMining.Simulate/weka_predictions.txt
+DataMining.Simulate/ncaa-filtered.arff
 DataMining.Simulate/SimulationResults
 DataMining.Transform/ARFF Files/*.arff
 DataMining.Transform/ARFF Files/*.txt
@@ -51,27 +52,6 @@ $tf/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
-
-# JustCode is a .NET coding add-in
-.JustCode
-
-# DotCover is a Code Coverage Tool
-*.dotCover
-
-# NCrunch
-_NCrunch_*
-.*crunch*.local.xml
-nCrunchTemp_*
-
-# DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
 
 # Click-Once directory
 publish/
@@ -134,17 +114,6 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
-# Node.js Tools for Visual Studio
-.ntvs_analysis.dat
-
-# Visual Studio LightSwitch build output
-**/*.HTMLClient/GeneratedArtifacts
-**/*.DesktopClient/GeneratedArtifacts
-**/*.DesktopClient/ModelManifest.xml
-**/*.Server/GeneratedArtifacts
-**/*.Server/ModelManifest.xml
-_Pvt_Extensions
-
 # =========================
 # Operating System Files
 # =========================
@@ -186,12 +155,6 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
 
 # Windows shortcuts
 *.lnk
