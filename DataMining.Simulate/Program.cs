@@ -15,7 +15,8 @@ namespace DataMining.Simulate
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformations SelectedFn = Transformations.Exp15;
+        const Transformations SelectedFn = Transformations.Sqrt;
+        const string hiddenLayers = "a";
 
         // input and output file names
         const string wekaResults = "weka_predictions.txt";
@@ -37,6 +38,12 @@ namespace DataMining.Simulate
             for (int seed = 0; seed < 10; seed++)
             {
                 List<string> output = new List<string>();
+                string outputFileName = string.Join("_",
+                    SimulatingTestSet ? "Test" : "Training",
+                    SelectedFn.ToString(),
+                    seed,
+                    hiddenLayers,
+                    ".txt");
                 string o = string.Empty;
                 string[] wekaPredictions = Analyze(SelectedFn, seed);
 
@@ -94,7 +101,7 @@ namespace DataMining.Simulate
 
                         foreach (Team winner in tournamentPool)
                         {
-                            if (winner.ActualFinish >= Functions.Map[SelectedFn].Invoke(nextRoundNum))
+                            if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 4))
                             {
                                 roundPoints += pointsPerWin;
                                 o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
@@ -135,21 +142,11 @@ namespace DataMining.Simulate
                     output.Add("");
 
 
-                    string outputFileName = string.Join("_",
-                        SimulatingTestSet ? "Test" : "Training",
-                        SelectedFn.ToString(),
-                        seed,
-                        ".txt");
-                    File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
+                    //File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
                 }
 
                 if (!SimulatingTestSet)
                 {
-                    string outputFileName = string.Join("_",
-                        SimulatingTestSet ? "Test" : "Training",
-                        SelectedFn.ToString(),
-                        seed,
-                        ".txt");
                     File.AppendAllLines(@"..\..\SimulationResults\" + outputFileName, new[] {
                         "Scores: " + string.Join(",", trainingScores),
                         "Average: " + trainingScores.Average(),
@@ -159,6 +156,7 @@ namespace DataMining.Simulate
                     });
                 }
             }
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -176,20 +174,35 @@ namespace DataMining.Simulate
             string filterCmd = string.Format("weka.filters.unsupervised.attribute.Remove -R 1-2 -i \"{0}\" -o \"{1}\"", trainingInputFileName, filterOutputFileName);
             string executeFilter = string.Format("java -classpath \"{0}\" {1}", wekaClassPath, filterCmd);
 
-            Process.Start("cmd.exe", "/C " + executeFilter).WaitForExit();
+            ProcessStartInfo filterProcessInfo = new ProcessStartInfo()
+            {
+                CreateNoWindow = true,
+                FileName = "cmd.exe",
+                Arguments = "/C " + executeFilter,
+                UseShellExecute = false
+            };
+            Process.Start(filterProcessInfo).WaitForExit();
 
             string classifierOutputFileName = @"..\..\weka_predictions.txt";
             string testFileName = SimulatingTestSet
                 ? arffPath + BuildDataSetFileName(function, false)
                 : filterOutputFileName;
-            string classifierCmd = string.Format("weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S {3} -E 20 -H a -t \"{0}\" -T \"{1}\" -c 5 -p 0 > \"{2}\"",
+            string classifierCmd = string.Format("weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S {3} -E 20 -H {4} -t \"{0}\" -T \"{1}\" -c 5 -p 0 > \"{2}\"",
                 filterOutputFileName,
                 testFileName,
                 classifierOutputFileName,
-                randomSeed);
+                randomSeed,
+                hiddenLayers);
             string executeClassifier = string.Format("java -classpath \"{0}\" {1}", wekaClassPath, classifierCmd);
 
-            Process.Start("cmd.exe", "/C " + executeClassifier).WaitForExit();
+            ProcessStartInfo classifierProcessInfo = new ProcessStartInfo()
+            {
+                CreateNoWindow = true,
+                FileName = "cmd.exe",
+                Arguments = "/C " + executeClassifier,
+                UseShellExecute = false
+            };
+            Process.Start(classifierProcessInfo).WaitForExit();
 
             // TODO: output it to weka_predictions.txt, skip first 5 lines
             /*other perceptron options:

@@ -21,20 +21,20 @@ namespace Transform
                 if (selectedTransforms.Length == 0)
                     selectedTransforms = (Transformations[])Enum.GetValues(typeof(Transformations));
 
-                foreach (Transformations t in selectedTransforms)
+                foreach (Transformations fn in selectedTransforms)
                 {
                     TransformData(
                         @"..\..\ARFF Files\" + TrainingFileName,
-                        @"..\..\ARFF Files\dm_" + t.ToString() + ".arff",
+                        @"..\..\ARFF Files\dm_" + fn.ToString() + ".arff",
                         linesToSkip: 20,
                         columnIndex: 6,
-                        fn: t);
+                        fn: fn);
                     TransformData(
                         @"..\..\ARFF Files\" + TestFileName,
-                        @"..\..\ARFF Files\dm2test_" + t.ToString() + ".arff",
+                        @"..\..\ARFF Files\dm2test_" + fn.ToString() + ".arff",
                         linesToSkip: 18,
                         columnIndex: 4,
-                        fn: t);
+                        fn: fn);
                 }
                 Console.ReadLine();
             }
@@ -59,8 +59,8 @@ namespace Transform
             {
                 char[] delimeters = { ',', '\t' };
                 string[] arr = original[i].Split(delimeters, StringSplitOptions.RemoveEmptyEntries);
-                int val = int.Parse(arr[columnIndex]);
-                arr[columnIndex] = Math.Round(Functions.Map[fn](val), 4).ToString();
+                int linearFinish = int.Parse(arr[columnIndex]);
+                arr[columnIndex] = Math.Round(Functions.Map[fn](linearFinish), 4).ToString();
                 //if (fn.ToString() == "Enum")
                 //    arr[columnIndex] = "'" + arr[columnIndex] + "'";
 
