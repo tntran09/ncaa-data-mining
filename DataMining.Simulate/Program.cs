@@ -15,8 +15,8 @@ namespace DataMining.Simulate
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformations SelectedFn = Transformations.Sqrt;
-        const string hiddenLayers = "a";
+        const Transformations SelectedFn = Transformations.Exp16;
+        const string hiddenLayers = "t";
 
         // input and output file names
         const string wekaResults = "weka_predictions.txt";
@@ -101,7 +101,7 @@ namespace DataMining.Simulate
 
                         foreach (Team winner in tournamentPool)
                         {
-                            if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 4))
+                            if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 3))
                             {
                                 roundPoints += pointsPerWin;
                                 o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
@@ -138,9 +138,9 @@ namespace DataMining.Simulate
                     o = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
                     trainingScores[i] = totalGamePoints;
                     Console.WriteLine(o);
+                    Console.WriteLine();
                     output.Add(o);
                     output.Add("");
-
 
                     //File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
                 }

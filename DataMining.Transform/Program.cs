@@ -60,7 +60,7 @@ namespace Transform
                 char[] delimeters = { ',', '\t' };
                 string[] arr = original[i].Split(delimeters, StringSplitOptions.RemoveEmptyEntries);
                 int linearFinish = int.Parse(arr[columnIndex]);
-                arr[columnIndex] = Math.Round(Functions.Map[fn](linearFinish), 4).ToString();
+                arr[columnIndex] = Math.Round(Functions.Map[fn](linearFinish), 3).ToString();
                 //if (fn.ToString() == "Enum")
                 //    arr[columnIndex] = "'" + arr[columnIndex] + "'";
 
