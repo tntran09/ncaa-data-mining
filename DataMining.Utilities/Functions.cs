@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace DataMining.Utilities
 {
-    public enum Transformations { Cubic, CubeRoot, Exponential, Inverse, Linear, Quadratic, LargeCubeRoot, Sqrt, Sqrt10, Cube0, Exp15, Exp18, Exp16 }
+    public enum Transformation { Cubic, CubeRoot, Exponential, Inverse, Linear, Quadratic, LargeCubeRoot, Sqrt, Sqrt10, Cube0, Exp15, Exp18, Exp16 }
 
     public static class Functions
     {
-        public static Dictionary<Transformations, Func<int, double>> Map = new Dictionary<Transformations, Func<int, double>>()
+        public static Dictionary<Transformation, Func<int, double>> Map = new Dictionary<Transformation, Func<int, double>>()
         {
-            { Transformations.CubeRoot, finish => NthRoot(finish - 4, 3) },
-            { Transformations.Cubic, finish => Math.Pow(finish - 4, 3) },
-            { Transformations.Exponential, finish => Math.Pow(2, finish) },
-            { Transformations.Inverse, finish => finish == 0 ? 0 : (1 - (1.0 / finish)) },
-            { Transformations.Linear, finish => finish },
-            { Transformations.Quadratic, finish => Math.Pow(finish, 2) },
-            { Transformations.LargeCubeRoot, finish => NthRoot(10 * (finish - 4), 3) },
-            { Transformations.Sqrt, finish => Math.Sqrt(finish) },
-            { Transformations.Sqrt10, finish => Math.Sqrt(finish * 10) },
-            { Transformations.Cube0, finish => Math.Pow(finish, 3) },
-            { Transformations.Exp15, finish => Math.Pow(1.5, finish) },
-            { Transformations.Exp18, finish => Math.Pow(1.8, finish) },
-            { Transformations.Exp16, finish => Math.Pow(1.6, finish) }
+            { Transformation.CubeRoot, finish => NthRoot(finish - 4, 3) },
+            { Transformation.Cubic, finish => Math.Pow(finish - 4, 3) },
+            { Transformation.Exponential, finish => Math.Pow(2, finish) },
+            { Transformation.Inverse, finish => finish == 0 ? 0 : (1 - (1.0 / finish)) },
+            { Transformation.Linear, finish => finish },
+            { Transformation.Quadratic, finish => Math.Pow(finish, 2) },
+            { Transformation.LargeCubeRoot, finish => NthRoot(10 * (finish - 4), 3) },
+            { Transformation.Sqrt, finish => Math.Sqrt(finish) },
+            { Transformation.Sqrt10, finish => Math.Sqrt(finish * 10) },
+            { Transformation.Cube0, finish => Math.Pow(finish, 3) },
+            { Transformation.Exp15, finish => Math.Pow(1.5, finish) },
+            { Transformation.Exp18, finish => Math.Pow(1.8, finish) },
+            { Transformation.Exp16, finish => Math.Pow(1.6, finish) }
         };
 
         public static double NthRoot(double x, double y)

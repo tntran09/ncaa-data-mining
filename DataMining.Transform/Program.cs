@@ -14,14 +14,14 @@ namespace Transform
         {
             try
             {
-                Transformations[] selectedTransforms = {
+                Transformation[] selectedTransforms = {
 
                 };
 
                 if (selectedTransforms.Length == 0)
-                    selectedTransforms = (Transformations[])Enum.GetValues(typeof(Transformations));
+                    selectedTransforms = (Transformation[])Enum.GetValues(typeof(Transformation));
 
-                foreach (Transformations fn in selectedTransforms)
+                foreach (Transformation fn in selectedTransforms)
                 {
                     TransformData(
                         @"..\..\ARFF Files\" + TrainingFileName,
@@ -45,7 +45,7 @@ namespace Transform
             }
         }
 
-        static void TransformData(string inputFilePath, string outputFilePath, int linesToSkip, int columnIndex, Transformations fn)
+        static void TransformData(string inputFilePath, string outputFilePath, int linesToSkip, int columnIndex, Transformation fn)
         {
             string[] original = File.ReadAllLines(inputFilePath);
             string[] modified = new string[original.Length];

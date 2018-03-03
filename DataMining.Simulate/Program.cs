@@ -15,7 +15,7 @@ namespace DataMining.Simulate
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformations SelectedFn = Transformations.Exp16;
+        const Transformation SelectedFn = Transformation.Exp16;
         const string hiddenLayers = "t";
 
         // input and output file names
@@ -164,7 +164,7 @@ namespace DataMining.Simulate
         /// </summary>
         /// <param name="function"></param>
         /// <returns></returns>
-        static string[] Analyze(Transformations function, int randomSeed)
+        static string[] Analyze(Transformation function, int randomSeed)
         {
             string wekaClassPath = @"C:\Program Files\Weka-3-8\weka.jar";
             string arffPath = @"..\..\..\DataMining.Transform\ARFF Files\";
@@ -212,7 +212,7 @@ namespace DataMining.Simulate
             return wekaPredictions.Skip(5).ToArray();
         }
 
-        static string BuildDataSetFileName(Transformations f, bool isTrainingFile)
+        static string BuildDataSetFileName(Transformation f, bool isTrainingFile)
         {
             return string.Format("{0}_{1}.arff",
                 isTrainingFile ? "dm" : "dm2test",
@@ -266,20 +266,6 @@ namespace DataMining.Simulate
         static Team SimulateGame(Team t1, Team t2)
         {
             return t1.PredictedFinish >= t2.PredictedFinish ? t1 : t2;
-        }
-    }
-
-    class Team
-    {
-        public string Name { get; set; }
-        public int Year { get; set; }
-        public int Seed { get; set; }
-        public double ActualFinish { get; set; }
-        public double PredictedFinish { get; set; }
-
-        public override string ToString()
-        {
-            return Year + " " + Name + " finished " + ActualFinish;
         }
     }
 }
