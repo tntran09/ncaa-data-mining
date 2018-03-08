@@ -29,7 +29,7 @@ namespace DataMining.Simulate
 
         static void Main(string[] args)
         {
-
+            
             // weka output does not include team names
             string[] teamNames = File.ReadAllLines(@"..\..\" + (SimulatingTestSet ? teamsTest : teamsTraining));
             int ITERATIONS = teamNames.Length / 64;
@@ -166,13 +166,14 @@ namespace DataMining.Simulate
         /// <returns></returns>
         static string[] Analyze(Transformation function, int randomSeed)
         {
+            // TODO: Fix the weka path here
             string wekaClassPath = @"C:\Program Files\Weka-3-8\weka.jar";
             string arffPath = @"..\..\..\DataMining.Transform\ARFF Files\";
 
             string trainingInputFileName = arffPath + BuildDataSetFileName(function, true);
             string filterOutputFileName = @"..\..\ncaa-filtered.arff";
-            string filterCmd = string.Format("weka.filters.unsupervised.attribute.Remove -R 1-2 -i \"{0}\" -o \"{1}\"", trainingInputFileName, filterOutputFileName);
-            string executeFilter = string.Format("java -classpath \"{0}\" {1}", wekaClassPath, filterCmd);
+            string filterCmd = $"weka.filters.unsupervised.attribute.Remove -R 1-2 -i \"{trainingInputFileName}\" -o \"{filterOutputFileName}\"";
+            string executeFilter = $"java -classpath \"{wekaClassPath}\" {filterCmd}";
 
             ProcessStartInfo filterProcessInfo = new ProcessStartInfo()
             {
@@ -183,17 +184,13 @@ namespace DataMining.Simulate
             };
             Process.Start(filterProcessInfo).WaitForExit();
 
-            string classifierOutputFileName = @"..\..\weka_predictions.txt";
+            string classifierOutputFileName = $@"..\..\{wekaResults}";
             string testFileName = SimulatingTestSet
                 ? arffPath + BuildDataSetFileName(function, false)
                 : filterOutputFileName;
-            string classifierCmd = string.Format("weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S {3} -E 20 -H {4} -t \"{0}\" -T \"{1}\" -c 5 -p 0 > \"{2}\"",
-                filterOutputFileName,
-                testFileName,
-                classifierOutputFileName,
-                randomSeed,
-                hiddenLayers);
-            string executeClassifier = string.Format("java -classpath \"{0}\" {1}", wekaClassPath, classifierCmd);
+            string classifierCmd = $"weka.classifiers.functions.MultilayerPerceptron " +
+                $"-L 0.3 -M 0.2 -N 500 -V 0 -S {randomSeed} -E 20 -H {hiddenLayers} -t \"{filterOutputFileName}\" -T \"{testFileName}\" -c 5 -p 0 > \"{classifierOutputFileName}\"";
+            string executeClassifier = $"java -classpath \"{wekaClassPath}\" {classifierCmd}";
 
             ProcessStartInfo classifierProcessInfo = new ProcessStartInfo()
             {
@@ -208,7 +205,7 @@ namespace DataMining.Simulate
             /*other perceptron options:
                 -classifications weka.classifiers.evaluation.output.prediction.PlainText
             */
-            string[] wekaPredictions = File.ReadAllLines(@"..\..\" + wekaResults);
+            string[] wekaPredictions = File.ReadAllLines(classifierOutputFileName);
             return wekaPredictions.Skip(5).ToArray();
         }
 
