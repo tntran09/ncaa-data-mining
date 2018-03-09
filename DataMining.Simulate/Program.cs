@@ -16,6 +16,7 @@ namespace DataMining.Simulate
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
         const Transformation SelectedFn = Transformation.Exp16;
+        const int MaxSeed = 10;
         const string hiddenLayers = "t";
 
         // input and output file names
@@ -32,10 +33,10 @@ namespace DataMining.Simulate
             
             // weka output does not include team names
             string[] teamNames = File.ReadAllLines(@"..\..\" + (SimulatingTestSet ? teamsTest : teamsTraining));
-            int ITERATIONS = teamNames.Length / 64;
-            int[] trainingScores = new int[ITERATIONS];
+            int numberOfTournamentsToSim = teamNames.Length / 64;
+            int[] trainingScores = new int[numberOfTournamentsToSim];
 
-            for (int seed = 0; seed < 10; seed++)
+            for (int seed = 0; seed < MaxSeed; seed++)
             {
                 List<string> output = new List<string>();
                 string outputFileName = string.Join("_",
@@ -47,7 +48,7 @@ namespace DataMining.Simulate
                 string o = string.Empty;
                 string[] wekaPredictions = Analyze(SelectedFn, seed);
 
-                for (int i = 0; i < ITERATIONS; i++)
+                for (int i = 0; i < numberOfTournamentsToSim; i++)
                 {
                     Team[] tournamentPool = new Team[64];
                     int year = yearOrder[i];

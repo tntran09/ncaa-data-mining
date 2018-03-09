@@ -6,7 +6,6 @@
     public class TrainingAnalysis
     {
         public Transformation Function { get; set; }
-        public int RandomSeed { get; set; }
         public int[] TrainingScores { get; set; }
         public double AverageScore { get; set; }
         public double StandardDeviation { get; set; }
@@ -15,6 +14,7 @@
         public int MaximumScore { get; set; }
         public double AverageWekaCorrelation { get; set; }
 
+        // ?
         public int NumberOfSimsAboveGlobalAverage { get; set; }
         public int NumberOfSimsBelowGlobalAverage { get; set; }
     }
