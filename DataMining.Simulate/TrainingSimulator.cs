@@ -9,20 +9,23 @@ namespace DataMining.Simulate
 {
     public class TrainingSimulator : Simulator
     {
-        public TrainingSimulator(string[] teamNames, string[] wekaPredictions) : base(teamNames, wekaPredictions)
+        public TrainingSimulator(string[] wekaPredictions) : base(wekaPredictions)
         {
         }
 
-        public override Team[] BuildTournamentPool()
+        public override Team[] BuildTournamentPool(string[] teamNames, int tournamentIndex)
         {
-            //Team[] tournamentPool = new Team[];
+            // Training simulations are always fixed at 64 teams
+            Team[] tournamentPool = new Team[64];
             for (int j = 0; j < 64; j++)
             {
-                //int idx = i * 64 + j;
-                //Team t = BuildTeam(TeamNames[idx], WekaPredictions[idx]);
-                //tournamentPool[j] = t;
+                int idx = tournamentIndex * 64 + j;
+                Team t = BuildTeam(teamNames[idx], WekaPredictions[idx]);
+                tournamentPool[j] = t;
             }
-            return null;
+
+            TournamentPool = tournamentPool;
+            return tournamentPool;
         }
 
         public override int SimulateTournament()

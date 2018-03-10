@@ -5,16 +5,15 @@ namespace DataMining.Simulate
 {
     public abstract class Simulator
     {
-        public string[] TeamNames { get; set; }
         public string[] WekaPredictions { get; set; }
+        public Team[] TournamentPool { get; set; }
 
-        public Simulator(string[] teamNames, string[] wekaPredictions)
+        public Simulator(string[] wekaPredictions)
         {
-            TeamNames = teamNames;
             WekaPredictions = wekaPredictions;
         }
         
-        public abstract Team[] BuildTournamentPool();
+        public abstract Team[] BuildTournamentPool(string[] teamNames, int tournamentIndex);
         public abstract int SimulateTournament();
         
         /// <summary>
