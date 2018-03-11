@@ -30,10 +30,10 @@ namespace DataMining.Simulate
 
         static void Main(string[] args)
         {
-            
             // weka output does not include team names
             string[] teamNames = File.ReadAllLines(@"..\..\" + (SimulatingTestSet ? teamsTest : teamsTraining));
             int numberOfTournamentsToSim = teamNames.Length / 64;
+
             int[] trainingScores = new int[numberOfTournamentsToSim];
 
             for (int seed = 0; seed < MaxSeed; seed++)
@@ -45,13 +45,17 @@ namespace DataMining.Simulate
                     seed,
                     hiddenLayers,
                     ".txt");
-                string o = string.Empty;
+                
                 string[] wekaPredictions = Analyze(SelectedFn, seed);
+
+                Simulator simulator = SimulatingTestSet ? null : new TrainingSimulator();
 
                 for (int i = 0; i < numberOfTournamentsToSim; i++)
                 {
-                    Team[] tournamentPool = new Team[64];
-                    int year = yearOrder[i];
+                    var tournamentPool = simulator.BuildTournamentPool(wekaPredictions, teamNames, i);
+                    var score = simulator.SimulateTournament(tournamentPool, SelectedFn, yearOrder[i]);
+
+                    //Team[] tournamentPool = new Team[64];
 
                     if (SimulatingTestSet && teamNames.Length != 64)
                     {
@@ -102,31 +106,34 @@ namespace DataMining.Simulate
 
                         foreach (Team winner in tournamentPool)
                         {
+                            string projectionResult = "";
+
                             if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 3))
                             {
                                 roundPoints += pointsPerWin;
-                                o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
+                                projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
                                 //o = winner.Seed + " " + winner.Name;
                             }
                             else
                             {
-                                o = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
+                                projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
                                 //o = winner.Seed + " " + winner.Name;
                             }
 
                             if (SimulatingTestSet)
                             {
-                                Console.WriteLine(o);
-                                output.Add(o);
+                                Console.WriteLine(projectionResult);
+                                output.Add(projectionResult);
                             }
                         }
                         roundPoints *= 10;
                         totalGamePoints += roundPoints;
 
+                        string roundResult = "";
                         if (SimulatingTestSet)
                         {
-                            o = roundPoints + " scored in round " + round;
-                            output.Add(o);
+                            roundResult = roundPoints + " scored in round " + round;
+                            output.Add(roundResult);
                             output.Add("");
                         }
                         else
@@ -134,13 +141,15 @@ namespace DataMining.Simulate
                             //o = roundPoints.ToString();
                             //output.Add(o);
                         }
-                        Console.WriteLine(o);
+                        Console.WriteLine(roundResult);
                     }
-                    o = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
+
+                    int year = yearOrder[i];
+                    string fullSimulationResult = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
                     trainingScores[i] = totalGamePoints;
-                    Console.WriteLine(o);
+                    Console.WriteLine(fullSimulationResult);
                     Console.WriteLine();
-                    output.Add(o);
+                    output.Add(fullSimulationResult);
                     output.Add("");
 
                     //File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
