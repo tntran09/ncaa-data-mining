@@ -19,7 +19,9 @@ namespace Transform
                 };
 
                 if (selectedTransforms.Length == 0)
+                {
                     selectedTransforms = (Transformation[])Enum.GetValues(typeof(Transformation));
+                }
 
                 foreach (Transformation fn in selectedTransforms)
                 {

@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace DataMining.Simulate
 {
     class Program
     {
         // variables that determine type of simulation to run
-        const bool SimulatingTestSet = true;
+        const bool SimulatingTestSet = false;
         //const bool UsingEnumData = false;
         const Transformation SelectedFn = Transformation.Exp16;
         const int MaxSeed = 10;
@@ -35,6 +36,10 @@ namespace DataMining.Simulate
             int numberOfTournamentsToSim = teamNames.Length / 64;
 
             int[] trainingScores = new int[numberOfTournamentsToSim];
+            var analysis = new TrainingAnalysis()
+            {
+                Function = SelectedFn
+            };
 
             for (int seed = 0; seed < MaxSeed; seed++)
             {
@@ -48,124 +53,123 @@ namespace DataMining.Simulate
                 
                 string[] wekaPredictions = Analyze(SelectedFn, seed);
 
-                Simulator simulator = SimulatingTestSet ? null : new TrainingSimulator();
+                var simulator = SimulatingTestSet ? null : new TrainingSimulator();
 
                 for (int i = 0; i < numberOfTournamentsToSim; i++)
                 {
                     var tournamentPool = simulator.BuildTournamentPool(wekaPredictions, teamNames, i);
                     var score = simulator.SimulateTournament(tournamentPool, SelectedFn, yearOrder[i]);
+                    trainingScores[i] = score;
 
                     //Team[] tournamentPool = new Team[64];
 
-                    if (SimulatingTestSet && teamNames.Length != 64)
-                    {
-                        Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]);
-                        Team t2 = null;
+                    //if (SimulatingTestSet && teamNames.Length != 64)
+                    //{
+                    //    Team t1 = BuildTeam(teamNames[0], wekaPredictions[0]);
+                    //    Team t2 = null;
 
-                        for (int j = 0, poolIndex = 0; j < teamNames.Length - 1; j++, poolIndex++)
-                        {
-                            t2 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+                    //    for (int j = 0, poolIndex = 0; j < teamNames.Length - 1; j++, poolIndex++)
+                    //    {
+                    //        t2 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
 
-                            // Only simulate a game if they are the same seed
-                            if (t1.Seed == t2.Seed)
-                            {
-                                Team win = SimulateGame(t1, t2);
-                                tournamentPool[poolIndex] = win;
-                                j++;
-                                t1 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
-                            }
-                            else
-                            {
-                                tournamentPool[poolIndex] = t1;
-                                t1 = t2;
-                            }
-                        }
+                    //        // Only simulate a game if they are the same seed
+                    //        if (t1.Seed == t2.Seed)
+                    //        {
+                    //            Team win = SimulateGame(t1, t2);
+                    //            tournamentPool[poolIndex] = win;
+                    //            j++;
+                    //            t1 = BuildTeam(teamNames[j + 1], wekaPredictions[j + 1]);
+                    //        }
+                    //        else
+                    //        {
+                    //            tournamentPool[poolIndex] = t1;
+                    //            t1 = t2;
+                    //        }
+                    //    }
 
-                        //Team t64 = BuildTeam(teamNames[63], wekaPredictions[63]);
-                        tournamentPool[63] = t2;
-                        // FirstFour teams will not be at the bottom of the bracket
-                    }
-                    else
-                    {
-                        for (int j = 0; j < 64; j++)
-                        {
-                            int idx = i * 64 + j;
-                            Team t = BuildTeam(teamNames[idx], wekaPredictions[idx]);
-                            tournamentPool[j] = t;
-                        }
-                    }
+                    //    //Team t64 = BuildTeam(teamNames[63], wekaPredictions[63]);
+                    //    tournamentPool[63] = t2;
+                    //    // FirstFour teams will not be at the bottom of the bracket
+                    //}
+                    //else
+                    //{
+                    //    for (int j = 0; j < 64; j++)
+                    //    {
+                    //        int idx = i * 64 + j;
+                    //        Team t = BuildTeam(teamNames[idx], wekaPredictions[idx]);
+                    //        tournamentPool[j] = t;
+                    //    }
+                    //}
 
-                    int totalGamePoints = 0;
-                    for (int round = 1; round <= 6; round++)
-                    {
-                        tournamentPool = SimulateRound(tournamentPool);
+                    //int totalGamePoints = 0;
+                    //for (int round = 1; round <= 6; round++)
+                    //{
+                    //    tournamentPool = SimulateRound(tournamentPool);
 
-                        int roundPoints = 0;
-                        int pointsPerWin = (int)Math.Pow(2, (round - 1));
-                        int nextRoundNum = round + 1;
+                    //    int roundPoints = 0;
+                    //    int pointsPerWin = (int)Math.Pow(2, (round - 1));
+                    //    int nextRoundNum = round + 1;
 
-                        foreach (Team winner in tournamentPool)
-                        {
-                            string projectionResult = "";
+                    //    foreach (Team winner in tournamentPool)
+                    //    {
+                    //        string projectionResult = "";
 
-                            if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 3))
-                            {
-                                roundPoints += pointsPerWin;
-                                projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
-                                //o = winner.Seed + " " + winner.Name;
-                            }
-                            else
-                            {
-                                projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
-                                //o = winner.Seed + " " + winner.Name;
-                            }
+                    //        if (winner.ActualFinish >= Math.Round(Functions.Map[SelectedFn].Invoke(nextRoundNum), 3))
+                    //        {
+                    //            roundPoints += pointsPerWin;
+                    //            projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT";
+                    //            //o = winner.Seed + " " + winner.Name;
+                    //        }
+                    //        else
+                    //        {
+                    //            projectionResult = "Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG";
+                    //            //o = winner.Seed + " " + winner.Name;
+                    //        }
 
-                            if (SimulatingTestSet)
-                            {
-                                Console.WriteLine(projectionResult);
-                                output.Add(projectionResult);
-                            }
-                        }
-                        roundPoints *= 10;
-                        totalGamePoints += roundPoints;
+                    //        if (SimulatingTestSet)
+                    //        {
+                    //            Console.WriteLine(projectionResult);
+                    //            output.Add(projectionResult);
+                    //        }
+                    //    }
+                    //    roundPoints *= 10;
+                    //    totalGamePoints += roundPoints;
 
-                        string roundResult = "";
-                        if (SimulatingTestSet)
-                        {
-                            roundResult = roundPoints + " scored in round " + round;
-                            output.Add(roundResult);
-                            output.Add("");
-                        }
-                        else
-                        {
-                            //o = roundPoints.ToString();
-                            //output.Add(o);
-                        }
-                        Console.WriteLine(roundResult);
-                    }
+                    //    string roundResult = "";
+                    //    if (SimulatingTestSet)
+                    //    {
+                    //        roundResult = roundPoints + " scored in round " + round;
+                    //        output.Add(roundResult);
+                    //        output.Add("");
+                    //    }
+                    //    else
+                    //    {
+                    //        //o = roundPoints.ToString();
+                    //        //output.Add(o);
+                    //    }
+                    //    Console.WriteLine(roundResult);
+                    //}
 
-                    int year = yearOrder[i];
-                    string fullSimulationResult = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
-                    trainingScores[i] = totalGamePoints;
-                    Console.WriteLine(fullSimulationResult);
-                    Console.WriteLine();
-                    output.Add(fullSimulationResult);
-                    output.Add("");
+                    //int year = yearOrder[i];
+                    //string fullSimulationResult = totalGamePoints + " total in " + (SimulatingTestSet ? 2017 : year);
+                    //trainingScores[i] = totalGamePoints;
+                    //Console.WriteLine(fullSimulationResult);
+                    //Console.WriteLine();
+                    //output.Add(fullSimulationResult);
+                    //output.Add("");
 
                     //File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
                 }
 
                 if (!SimulatingTestSet)
                 {
-                    File.AppendAllLines(@"..\..\SimulationResults\" + outputFileName, new[] {
-                        "Scores: " + string.Join(",", trainingScores),
-                        "Average: " + trainingScores.Average(),
-                        "Min: " + trainingScores.Min(),
-                        "Max: " + trainingScores.Max(),
-                        ""
-                    });
+                    analysis.TrainingScores.AddRange(trainingScores);
                 }
             }
+            analysis.AnalyzeData();
+
+            var outputString = JsonConvert.SerializeObject(analysis, Formatting.Indented);
+            File.WriteAllText($@"..\..\SimulationResults\Training-{SelectedFn.ToString()}-{MaxSeed}.txt", outputString);
             Console.ReadLine();
         }
 
@@ -176,8 +180,7 @@ namespace DataMining.Simulate
         /// <returns></returns>
         static string[] Analyze(Transformation function, int randomSeed)
         {
-            // TODO: Fix the weka path here
-            string wekaClassPath = @"C:\Program Files\Weka-3-8\weka.jar";
+            string wekaClassPath = @"C:\Users\toan\Downloads\weka-stable-3-8\weka\weka.jar";
             string arffPath = @"..\..\..\DataMining.Transform\ARFF Files\";
 
             string trainingInputFileName = arffPath + BuildDataSetFileName(function, true);
