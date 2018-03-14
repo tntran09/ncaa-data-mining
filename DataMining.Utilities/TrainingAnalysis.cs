@@ -7,7 +7,7 @@ namespace DataMining.Utilities
     /// <summary>
     /// Model class which represents how a function performed on training data
     /// </summary>
-    public class TrainingAnalysis
+    public class TrainingAnalysis : IAnalysis
     {
         public TrainingAnalysis()
         {

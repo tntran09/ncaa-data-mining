@@ -14,10 +14,10 @@ namespace DataMining.Simulate
     class Program
     {
         // variables that determine type of simulation to run
-        const bool SimulatingTestSet = false;
+        const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformation SelectedFn = Transformation.Exp16;
-        const int MaxSeed = 10;
+        const Transformation SelectedFn = Transformation.Linear;
+        const int MaxSeed = 1;
         const string hiddenLayers = "t";
 
         // input and output file names
@@ -34,12 +34,10 @@ namespace DataMining.Simulate
             // weka output does not include team names
             string[] teamNames = File.ReadAllLines(@"..\..\" + (SimulatingTestSet ? teamsTest : teamsTraining));
             int numberOfTournamentsToSim = teamNames.Length / 64;
-
-            int[] trainingScores = new int[numberOfTournamentsToSim];
-            var analysis = new TrainingAnalysis()
-            {
-                Function = SelectedFn
-            };
+            
+            var simulator = SimulatingTestSet
+                ? (Simulator) new TestSimulator()
+                : new TrainingSimulator();
 
             for (int seed = 0; seed < MaxSeed; seed++)
             {
@@ -53,13 +51,11 @@ namespace DataMining.Simulate
                 
                 string[] wekaPredictions = Analyze(SelectedFn, seed);
 
-                var simulator = SimulatingTestSet ? null : new TrainingSimulator();
 
                 for (int i = 0; i < numberOfTournamentsToSim; i++)
                 {
                     var tournamentPool = simulator.BuildTournamentPool(wekaPredictions, teamNames, i);
-                    var score = simulator.SimulateTournament(tournamentPool, SelectedFn, yearOrder[i]);
-                    trainingScores[i] = score;
+                    simulator.SimulateTournament(tournamentPool, SelectedFn, yearOrder[i]);
 
                     //Team[] tournamentPool = new Team[64];
 
@@ -160,16 +156,15 @@ namespace DataMining.Simulate
 
                     //File.WriteAllLines(@"..\..\SimulationResults\" + outputFileName, output);
                 }
-
-                if (!SimulatingTestSet)
-                {
-                    analysis.TrainingScores.AddRange(trainingScores);
-                }
+                
             }
+
+            var analysis = simulator.GetAnalysis();
             analysis.AnalyzeData();
 
             var outputString = JsonConvert.SerializeObject(analysis, Formatting.Indented);
-            File.WriteAllText($@"..\..\SimulationResults\Training-{SelectedFn.ToString()}-{MaxSeed}.txt", outputString);
+            var testOrTraining = SimulatingTestSet ? "Test" : "Training";
+            File.WriteAllText($@"..\..\SimulationResults\{testOrTraining}-{SelectedFn.ToString()}-{MaxSeed}.txt", outputString);
             Console.ReadLine();
         }
 

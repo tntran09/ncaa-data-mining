@@ -5,6 +5,8 @@ namespace DataMining.Simulate
 {
     public class TrainingSimulator : Simulator
     {
+        public TrainingAnalysis Analysis { get; set; } = new TrainingAnalysis();
+
         public override Team[] BuildTournamentPool(string[] wekaPredictions, string[] teamNames, int tournamentIndex)
         {
             // Training simulations are always fixed at 64 teams
@@ -56,7 +58,15 @@ namespace DataMining.Simulate
             Console.WriteLine(totalGamePoints + " total in " + year);
             Console.WriteLine();
 
+            this.Analysis.Function = selectedFunction;
+            this.Analysis.TrainingScores.Add(totalGamePoints);
             return totalGamePoints;
+        }
+
+        public override IAnalysis GetAnalysis()
+        {
+            Analysis.AnalyzeData();
+            return Analysis;
         }
     }
 }

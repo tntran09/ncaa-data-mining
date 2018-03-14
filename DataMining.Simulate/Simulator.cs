@@ -7,6 +7,7 @@ namespace DataMining.Simulate
     {
         public abstract Team[] BuildTournamentPool(string[] wekaPredictions, string[] teamNames, int tournamentIndex);
         public abstract int SimulateTournament(Team[] tournamentPool, Transformation selectedFunction, int year);
+        public abstract IAnalysis GetAnalysis();
         
         /// <summary>
         /// Builds a Team object with the projected finish from WEKA
