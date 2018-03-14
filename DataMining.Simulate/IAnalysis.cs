@@ -1,4 +1,4 @@
-﻿namespace DataMining.Utilities
+﻿namespace DataMining.Simulate
 {
     public interface IAnalysis
     {

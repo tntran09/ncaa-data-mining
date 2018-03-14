@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataMining.Utilities;
 
-namespace DataMining.Utilities
+namespace DataMining.Simulate
 {
     /// <summary>
     /// Model class which represents how a function performed on training data
