@@ -1,3 +1,67 @@
+Villanova,		2017,	1
+Mt St Marys,		2017,	16
+Wisconsin,		2017,	8
+Virginia Tech,	2017,	9
+Virginia,			2017,	5
+UNC Wilmington,	2017,	12
+Florida,			2017,	4
+ETSU,				2017,	13
+SMU,				2017,	6
+USC,				2017,	11
+Baylor,			2017,	3
+New Mexico St,	2017,	14
+South Carolina,	2017,	7
+Marquette,		2017,	10
+Duke,				2017,	2
+Troy,				2017,	15
+Gonzaga,			2017,	1
+South Dakota St,	2017,	16
+Northwestern,		2017,	8
+Vanderbilt,		2017,	9
+Notre Dame,		2017,	5
+Princeton,		2017,	12
+West Virginia,	2017,	4
+Bucknell,			2017,	13
+Maryland,			2017,	6
+Xavier,			2017,	11
+FSU,				2017,	3
+FGCU,				2017,	14
+Saint Marys,		2017,	7
+VCU,				2017,	10
+Arizona,			2017,	2
+North Dakota,		2017,	15
+Kansas,			2017,	1
+UC Davis,			2017,	16
+Miami,			2017,	8
+Michigan State,	2017,	9
+Iowa State,		2017,	5
+Nevada,			2017,	12
+Purdue,			2017,	4
+Vermont,			2017,	13
+Creighton,		2017,	6
+URI,				2017,	11
+Oregon,			2017,	3
+Iona,				2017,	14
+Michigan,			2017,	7
+Oklahoma State,	2017,	10
+Louisville,		2017,	2
+Jacksonville St,	2017,	15
+UNC,				2017,	1
+Texas Southern,	2017,	16
+Arkansas,			2017,	8
+Seton Hall,		2017,	9
+Minnesota,		2017,	5
+Mid Tennessee,	2017,	12
+Butler,			2017,	4
+Winthrop,			2017,	13
+Cincinnati,		2017,	6
+Kansas State,		2017,	11
+UCLA,				2017,	3
+Kent State,		2017,	14
+Dayton,			2017,	7
+Wichita State,	2017,	10
+Kentucky,			2017,	2
+N Kentucky,		2017,	15
 Kansas,		2016,	1
 Austin Peay,	2016,	16
 Colorado,		2016,	8

@@ -62,9 +62,6 @@
     <None Include="ARFF Files\dm_Sqrt.arff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ARFF Files\dmtest.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DataMining.Utilities\DataMining.Utilities.csproj">
       <Project>{2a6886a7-69ec-4622-9613-97d504c8f879}</Project>
       <Name>DataMining.Utilities</Name>

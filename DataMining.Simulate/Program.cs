@@ -16,8 +16,8 @@ namespace DataMining.Simulate
         // variables that determine type of simulation to run
         const bool SimulatingTestSet = true;
         //const bool UsingEnumData = false;
-        const Transformation SelectedFn = Transformation.Exp18;
-        const int MaxSeed = 10;
+        const Transformation SelectedFn = Transformation.Quadratic;
+        const int MaxSeed = 25;
         const string hiddenLayers = "a";
 
         // input and output file names
@@ -27,7 +27,7 @@ namespace DataMining.Simulate
         const string simulationResultsFile = "simulation.txt";
 
         // training input not in order of year.
-        static readonly int[] yearOrder = { 2016, 2015, 2014, 2013, 2012, 2011, 2009, 2010 };
+        static readonly int[] yearOrder = { 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2009, 2010 };
 
         static void Main(string[] args)
         {
@@ -55,7 +55,7 @@ namespace DataMining.Simulate
                 for (int i = 0; i < numberOfTournamentsToSim; i++)
                 {
                     var tournamentPool = simulator.BuildTournamentPool(wekaPredictions, teamNames, i);
-                    simulator.SimulateTournament(tournamentPool, SelectedFn, SimulatingTestSet ? 2017 : yearOrder[i]);
+                    simulator.SimulateTournament(tournamentPool, SelectedFn, SimulatingTestSet ? 2018 : yearOrder[i]);
 
                     //Team[] tournamentPool = new Team[64];
 

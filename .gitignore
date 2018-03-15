@@ -1,6 +1,5 @@
 # Assets and output directories
 *.xlsx
-DataMining.Scraper/*.txt
 DataMining.Simulate/simulation.txt
 DataMining.Simulate/weka_predictions.txt
 DataMining.Simulate/ncaa-filtered.arff

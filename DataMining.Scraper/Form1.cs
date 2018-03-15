@@ -106,7 +106,7 @@ namespace DataMining.Scraper
                    tpp = body[tppSelect].First().Text();
             
             string name = teamDropdown.Text,
-                   year = "2017",
+                   year = "2018",
                    seed = seedTextBox.Text,
                  finish = "0";
 
