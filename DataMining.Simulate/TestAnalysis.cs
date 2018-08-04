@@ -23,6 +23,7 @@ namespace DataMining.Simulate
                 AggregateSimulation[i] = GetMostPopularPick(allPredictionsForGame);
             }
 
+            // Chop up the whole winners pool and group by round for readability in analysis results
             AggregateSimulationsByRound = new string[6][];
             AggregateSimulationsByRound[0] = AggregateSimulation.Take(32).Select(x => x.Item1.Name).ToArray();
             AggregateSimulationsByRound[1] = AggregateSimulation.Skip(32).Take(16).Select(x => x.Item1.Name).ToArray();
@@ -32,7 +33,7 @@ namespace DataMining.Simulate
             AggregateSimulationsByRound[5] = AggregateSimulation.Skip(62).Take(1).Select(x => x.Item1.Name).ToArray();
 
             // Try to simulate tournament with specific set of winners rather than comparing finishes
-            //(new TestSimulator()).SimulateTournament(AggregateSimulation.Select(x => x.Item1).ToArray(), Function, 9999);
+            TestScore = (new TestSimulator()).SimulateTournament(AggregateSimulation.Select(x => x.Item1).ToArray(), Function, Year);
         }
 
         private Tuple<Team, double> GetMostPopularPick(params Team[] teams)
@@ -49,6 +50,7 @@ namespace DataMining.Simulate
         }
         
         public Transformation Function { get; set; }
+        public int Year { get; set; }
         
         // Actual simulations based on random seed
         [JsonIgnore]
@@ -56,7 +58,10 @@ namespace DataMining.Simulate
 
         // The pool of teams predicted to win each game and the percentage of simulations that predicted that result
         public Tuple<Team, double>[] AggregateSimulation { get; set; } = new Tuple<Team, double>[63];
+        
+        // Same as AggregateSimulation, grouped by round
         public string[][] AggregateSimulationsByRound { get; set; }
+
         // Test set may or may not produce a valuable number here, depending if the tournament has happened and finish attributes populated
         public int TestScore { get; set; }
     }

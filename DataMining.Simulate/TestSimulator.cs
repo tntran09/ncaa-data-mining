@@ -11,6 +11,11 @@ namespace DataMining.Simulate
     {
         public TestAnalysis Analysis { get; set; } = new TestAnalysis();
 
+        public override IAnalysis GetAnalysis()
+        {
+            return Analysis;
+        }
+
         public override Team[] BuildTournamentPool(string[] wekaPredictions, string[] teamNames, int tournamentIndex)
         {
             Team[] tournamentPool = new Team[64];
@@ -78,12 +83,12 @@ namespace DataMining.Simulate
                     if (winner.ActualFinish >= Math.Round(Functions.Map[selectedFunction].Invoke(nextRoundNum), 3))
                     {
                         roundPoints += pointsPerWin;
-                        Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT");
+                        //Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT");
                         //o = winner.Seed + " " + winner.Name;
                     }
                     else
                     {
-                        Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG");
+                        //Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG");
                         //o = winner.Seed + " " + winner.Name;
                     }
 
@@ -95,17 +100,13 @@ namespace DataMining.Simulate
                 totalGamePoints += roundPoints;
             }
 
-            Console.WriteLine(totalGamePoints + " total in " + year);
+            //Console.WriteLine(totalGamePoints + " total in " + year);
             Console.WriteLine();
 
             this.Analysis.Function = selectedFunction;
+            this.Analysis.Year = year;
             this.Analysis.Simulations.Add(winnersPool);
             return totalGamePoints;
-        }
-
-        public override IAnalysis GetAnalysis()
-        {
-            return Analysis;
         }
     }
 }

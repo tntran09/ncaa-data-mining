@@ -7,6 +7,12 @@ namespace DataMining.Simulate
     {
         public TrainingAnalysis Analysis { get; set; } = new TrainingAnalysis();
 
+        public override IAnalysis GetAnalysis()
+        {
+            //Analysis.AnalyzeData();
+            return Analysis;
+        }
+
         public override Team[] BuildTournamentPool(string[] wekaPredictions, string[] teamNames, int tournamentIndex)
         {
             // Training simulations are always fixed at 64 teams
@@ -19,6 +25,20 @@ namespace DataMining.Simulate
             }
             
             return tournamentPool;
+        }
+
+        public int SimulateTournament2(Team[] tournamentPool, Transformation selectedFunction, int year)
+        {
+            var winners = base.SimulateTournamentPool(tournamentPool, selectedFunction, base.GetActualWinner);
+            int score = base.CalculateScoreOfBracket(tournamentPool, winners, selectedFunction);
+
+            Console.WriteLine($"{score} total in {year}");
+            Console.WriteLine();
+
+            this.Analysis.Function = selectedFunction;
+            this.Analysis.TrainingScores.Add(score);
+
+            return score;
         }
 
         public override int SimulateTournament(Team[] tournamentPool, Transformation selectedFunction, int year)
@@ -41,13 +61,6 @@ namespace DataMining.Simulate
                     if (winner.ActualFinish >= Math.Round(Functions.Map[selectedFunction].Invoke(nextRoundNum), 3))
                     {
                         roundPoints += pointsPerWin;
-                        Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " CORRECT");
-                        //o = winner.Seed + " " + winner.Name;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proj " + winner.Name + " to round " + (nextRoundNum) + " WRONG");
-                        //o = winner.Seed + " " + winner.Name;
                     }
                     
                 }
@@ -61,12 +74,6 @@ namespace DataMining.Simulate
             this.Analysis.Function = selectedFunction;
             this.Analysis.TrainingScores.Add(totalGamePoints);
             return totalGamePoints;
-        }
-
-        public override IAnalysis GetAnalysis()
-        {
-            Analysis.AnalyzeData();
-            return Analysis;
         }
     }
 }
